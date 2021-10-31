@@ -11,9 +11,9 @@ import static com.zcu.GVAR.*;
 
 public class GamePanel extends JPanel implements ActionListener {
 
-
-    final int x[] = new int[GAME_UNITS];
-    final int y[] = new int[GAME_UNITS];
+    boolean didChange=false;
+    int x[] = new int[GAME_UNITS];
+    int y[] = new int[GAME_UNITS];
     int bodyParts = 3;
     int applesEaten =0;
     int appleX;
@@ -28,6 +28,7 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
         this.setFocusable(true);
+        this.addKeyListener(new MyKeyAdapter());
 
         StartGame();
 
@@ -35,9 +36,12 @@ public class GamePanel extends JPanel implements ActionListener {
     public void StartGame(){
 
         NewApple();
+        bodyParts=3;
+        direction='D';
+        x[0]=0;
+        y[0]=0;
         running = true;
         timer.start();
-        this.addKeyListener(new MyKeyAdapter());
 
     }
     public void paintComponent(Graphics g){
@@ -46,7 +50,7 @@ public class GamePanel extends JPanel implements ActionListener {
     }
     public void Draw(Graphics g){
         for (int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++) {
-            g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
+            g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_WIDTH);
             g.drawLine(0, i*UNIT_SIZE, SCREEN_HEIGHT, i*UNIT_SIZE);
 
         }
@@ -68,6 +72,7 @@ public class GamePanel extends JPanel implements ActionListener {
         appleY = random.nextInt((int) (SCREEN_HEIGHT/UNIT_SIZE)-2)*UNIT_SIZE+UNIT_SIZE;
     }
     public void Move(){
+        didChange= false;
         for (int i = bodyParts; i>0 ; i--) {
             x[i] = x[i-1];
             y[i] = y[i-1];
@@ -135,27 +140,34 @@ public class GamePanel extends JPanel implements ActionListener {
     public class MyKeyAdapter extends KeyAdapter{
         @Override
         public void keyPressed(KeyEvent e){
+
             switch (e.getKeyCode()){
                 case KeyEvent.VK_A:
-                    if (direction != 'D'){
+                    if (direction != 'D'&& direction!='A'&&!didChange){
                         direction = 'A';
+                        didChange=true;
                     }
                     break;
                 case KeyEvent.VK_D:
-                    if (direction != 'A'){
+                    if (direction != 'A'&& direction!='D'&&!didChange){
                         direction = 'D';
+                        didChange=true;
                     }
                     break;
                 case KeyEvent.VK_W:
-                    if (direction != 'S'){
+                    if (direction != 'S'&& direction!='W'&&!didChange){
                         direction = 'W';
+                        didChange=true;
                     }
                     break;
                 case KeyEvent.VK_S:
-                    if (direction != 'W'){
+                    if (direction != 'W'&& direction!='S'&&!didChange){
                         direction = 'S';
+                        didChange=true;
                     }
                     break;
+                case KeyEvent.VK_ENTER:
+                    StartGame();
             }
         }
     }
