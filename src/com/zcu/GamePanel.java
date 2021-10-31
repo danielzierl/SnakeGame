@@ -91,7 +91,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public void AddBodyOnApple(){
         if (CheckCollisionsApple()) {
             bodyParts++;
-            DELAY-=5;
+            //DELAY-=5;
             timer.setDelay(DELAY);
             NewApple();
         }
